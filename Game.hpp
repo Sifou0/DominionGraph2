@@ -2,21 +2,34 @@
 #define GAME_H
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Card.hpp"
+#include "Carte.h"
+#include "CarteVictoire.h"
+#include "CarteReversed.h"
+#include "PlateformeGame.h"
+#include "Arrow.h"
+#include "Deck.h"
+#include "Screen.h"
 
-class Game
+class Game : public Screen
 {
 private:
-    sf::RenderWindow* window;
     sf::Event event;
-    sf::Texture* cardsTexture;
-    std::vector<Card*> cards; //0 : mon deck, 1 : pile gauche
-public:
-    Game();
-    ~Game();
-    void run();
+    Arrow* arrow;
+    Deck* monDeck;
+    Deck* reversedCartes;
+    int currId;
+    int nextScreen;
+    void handleKeys();
     void handleEvents();
     void initCards();
+    void drawMonDeck();
+    void carteOnTop();
+    void drawReversed();
+
+public:
+    Game(sf::RenderWindow*);
+    ~Game();
+    int run();
 };
 
 #endif

@@ -7,12 +7,11 @@ using namespace std;
 
 CarteRoyaume::CarteRoyaume() 
 {
-
 	m_type_carte = Carte::ROYAUME;
 	m_type_cart_royaume = TypeRoyaume::ACTION_ACTION;
 	m_carte_cost = 2;
 	m_description_carte = "Carte tranquille posey";
-	m_nom_carte = "Village";
+	m_nom_carte = "Bucheron";
 	
 }
 
@@ -23,15 +22,20 @@ CarteRoyaume::CarteRoyaume()
 	m_type_cart_royaume = typecart;
 	m_carte_cost = cost;
 	effect = &func;
+	if(m_nom_carte == "Village") 
+	{
+		//std::cout << "vill" << std::endl;
+		this->setTextureId(25);
+		//std::cout << this->getTextureId() << std::endl;
+	}
+	else if(m_nom_carte == "Bucheron") this->setTextureId(33);
 }
 
 
 
   void CarteRoyaume::attribute_fun( void(&func)(Joueur, std::vector<Joueur*>) , Joueur j)
   {
-	 
 	effect = &func;
-	
 
   }
  /*  void CarteRoyaume::testshowAdressEffect()const

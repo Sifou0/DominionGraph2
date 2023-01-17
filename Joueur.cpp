@@ -94,7 +94,7 @@ bool Joueur::isGoodIndice(int position, std::vector<Carte*>cartes)const
 
 }
 
-vector<Carte*> Joueur::getHandCartes()const
+vector<Carte*> Joueur::getHandCartes() const
 {
 	return m_hand;
 }

@@ -36,7 +36,7 @@ int CarteVictoire::getValueVictoire()const {
  }
 
 CarteVictoire::CarteVictoire() {
-	this->textureId = 14;
+	this->setTextureId(14);
 	m_type_carte = Carte::VICTOIRE;
 	m_typevictoire = CarteVictoire::DOMAINE;
 	m_valeur_victoire = 1;
@@ -50,24 +50,24 @@ CarteVictoire::CarteVictoire(TypeVictoire typevictoire):m_typevictoire(typevicto
 	switch (typevictoire)
 	{
 	case CarteVictoire::DOMAINE:
-		this->textureId = 14;
 		m_valeur_victoire = 1;
 		m_carte_cost = 2;
+		this->setTextureId(14);
 		break;
 	case CarteVictoire::DUCHET:
-		this->textureId = 11;
 		m_valeur_victoire = 3;
 		m_carte_cost = 5;
+		this->setTextureId(11);
 		break;
 	case CarteVictoire::PROVINCE:
-		this->textureId = 10;
 		m_valeur_victoire = 6;
 		m_carte_cost = 8;
+		this->setTextureId(10);
 		break;
 	case CarteVictoire::MALEDICTION:
-			this->textureId = 9;
-			m_valeur_victoire = -1;
-			m_carte_cost = 0;
+		m_valeur_victoire = -1;
+		m_carte_cost = 0;
+		this->setTextureId(9);
 		break;
 	default:
 		cout << "ERRORR" << endl;

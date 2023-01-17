@@ -3,6 +3,8 @@
 Deck::Deck()
 {
     monDeck = std::vector<Carte*>();
+    carteTexture = new sf::Texture();
+    carteTexture->loadFromFile("assets/Cards/Carte.png");
 }
 
 
@@ -29,4 +31,12 @@ void Deck::setDeck(std::vector<Carte*> v)
 std::vector<Carte*> Deck::getCartes()
 {
     return this->monDeck;
+}
+
+void Deck::loadTextures()
+{
+    for(Carte* c : monDeck)
+    {
+        c->loadTexture(carteTexture);
+    }
 }

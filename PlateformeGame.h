@@ -36,8 +36,8 @@ public:
 	static void achatCarteVictoire(Joueur &joueur);
 	
 	static void putonHand(Joueur &joueur , Carte &carte);
-	static void  StartGame();
-	static void  PhaseAjustement(Joueur &joueur);
+	static void StartGame();
+	static void PhaseAjustement(Joueur &joueur);
 	static void PhaseAchat(Joueur & joueur);
 	static void PhaseAction(Joueur & joueur);
 
@@ -61,7 +61,7 @@ private:
 	static std::vector<CarteVictoire*> pille_duchet;
 	static std::vector<CarteVictoire*> pille_province;
 	
-	static std::vector<Joueur*>m_list_joueur;
+	static std::vector<Joueur*> m_list_joueur;
 	static std::vector<CarteRoyaume*>  carte_royaume_1;
 	static std::vector<CarteRoyaume*>  carte_royaume_2;
 	static std::vector<CarteRoyaume*>  carte_royaume_3;

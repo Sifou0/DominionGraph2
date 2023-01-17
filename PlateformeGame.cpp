@@ -487,7 +487,6 @@ void func_buch(Joueur j , vector<Joueur*>list_joueur)
 
 void func_marche(Joueur j , vector<Joueur*>list_joueur)
 {
-	
 	PlateformeGame::increment_action();
 	PlateformeGame::increment_achat();
 	PlateformeGame::ajouterPiece(1);

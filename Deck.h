@@ -7,6 +7,7 @@ class Deck
 {
 private:
     std::vector<Carte*> monDeck;
+    sf::Texture* carteTexture;
 public:
     Deck();
     ~Deck();
@@ -14,6 +15,7 @@ public:
     void clearDeck();
     void setDeck(std::vector<Carte*>);
     std::vector<Carte*> getCartes();
+    void loadTextures();
 };
 
 #endif

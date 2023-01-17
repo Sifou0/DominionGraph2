@@ -37,8 +37,7 @@ private:
 	TypeRoyaume m_type_cart_royaume;
 	std::string m_nom_carte;
 	std::string m_description_carte;
-	void (* effect)(Joueur joueur, std::vector<Joueur*>joueurs );
-	
+	void (* effect)(Joueur joueur, std::vector<Joueur*>joueurs);	
 };
 
 #endif

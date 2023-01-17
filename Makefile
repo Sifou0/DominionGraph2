@@ -2,8 +2,11 @@ CPP = g++
 SFML = -g -lsfml-graphics -lsfml-window -lsfml-system
 
 
-main: main.o Game.o Card.o
+main: Carte.o CarteVictoire.o CarteRoyaume.o CarteTresor.o CarteReversed.o Deck.o Joueur.o PlateformeGame.o Screen.o Arrow.o Menu.o Game.o main.o
 	$(CPP) -o $@ $^ $(SFML)
 
 %.o : %.cpp
-	$(CPP) -o $@ -c $< 
+	$(CPP) -o $@ -c $<
+
+clean:
+	rm -f *.o *~ *.core

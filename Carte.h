@@ -8,11 +8,11 @@ class Carte
 private:
 	sf::RectangleShape* shape;
 	sf::Texture* texture;
-	int nb;
+	int textureId;
 public:
 	enum TypeCarte
 	{
-		VICTOIRE,TRESOR,ROYAUME
+		VICTOIRE,TRESOR,ROYAUME,REVERSED
 	};
 
 	virtual void afficher() const = 0;
@@ -25,11 +25,11 @@ public:
 	virtual ~Carte();
 	void loadTexture(sf::Texture*);
     sf::RectangleShape* getDrawable();
-	
+	void setTextureId(int);
+
 protected:
 	TypeCarte m_type_carte;
 	int m_carte_cost;
-	int textureId;
 };
 
 #endif
