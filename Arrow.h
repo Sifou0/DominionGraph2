@@ -11,6 +11,7 @@ private:
 public:
     Arrow();
     ~Arrow();
+    Arrow(int);
     sf::RectangleShape* getDrawable();
 };
 
