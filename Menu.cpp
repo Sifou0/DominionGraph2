@@ -5,7 +5,7 @@ Menu::Menu(sf::RenderWindow* w) : Screen(w)
     backgroundTexture = new sf::Texture();
     backgroundTexture->loadFromFile("assets/Images/bg.jpg");
     background = new sf::Sprite(*backgroundTexture);
-    buttons = std::vector<Button*> {new Button(), new Button(), new Button()};
+    buttons = std::vector<Button*> {new Button("Jouer"), new Button("En ligne"), new Button("Quitter")};
     arrows = std::vector<Arrow*> {new Arrow(2),new Arrow(1)};
     currButton = 0;
 }
@@ -60,7 +60,9 @@ void Menu::drawButtons()
     {
         buttons[i]->getDrawable()->setPosition(window->getSize().x/2 - 0.2 * buttons[i]->getSize().x / 2, window->getSize().y*0.3 + i * window->getSize().y * 0.15);
         buttons[i]->getDrawable()->setScale(0.2,0.2);
+        buttons[i]->getText()->setPosition(buttons[i]->getDrawable()->getPosition().x + buttons[i]->getSize().x * 0.2 * 0.5 - (buttons[i]->getNbChar() * buttons[i]->getText()->getCharacterSize())*0.222,buttons[i]->getDrawable()->getPosition().y + buttons[i]->getSize().y * 0.035 * 0.5);
         window->draw(*(buttons[i]->getDrawable()));
+        window->draw(*(buttons[i]->getText()));
     }
 }
 
