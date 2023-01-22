@@ -10,6 +10,7 @@ private:
     sf::Texture* carteTexture;
 public:
     Deck();
+    Deck(std::vector<Carte*> monDeck);
     ~Deck();
     void addToDeck(Carte*);
     void clearDeck();

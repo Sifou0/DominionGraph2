@@ -15,7 +15,7 @@ public:
 	CarteVictoire(TypeVictoire typevictoire);
 	~CarteVictoire();
 	int getValueVictoire()const;
-	std::string getTypeVictoire()const;
+	TypeVictoire getTypeVictoire()const;
 	virtual void afficher()const;
 	virtual void bref_description()const;
 	virtual  TypeCarte getCardType() const;

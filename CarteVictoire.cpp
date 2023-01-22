@@ -30,9 +30,9 @@ int CarteVictoire::getValueVictoire()const {
 	return m_valeur_victoire;
 }
 
- string CarteVictoire::getTypeVictoire() const{
+ CarteVictoire::TypeVictoire CarteVictoire::getTypeVictoire() const{
  
-	 return enum_to_string(m_typevictoire);
+	 return m_typevictoire;
  }
 
 CarteVictoire::CarteVictoire() {
@@ -41,6 +41,7 @@ CarteVictoire::CarteVictoire() {
 	m_typevictoire = CarteVictoire::DOMAINE;
 	m_valeur_victoire = 1;
 	m_carte_cost = 2;
+	setTextureId(14);
 }
 
 CarteVictoire::CarteVictoire(TypeVictoire typevictoire):m_typevictoire(typevictoire)

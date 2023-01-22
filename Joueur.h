@@ -20,7 +20,7 @@ public:
 	void showDiscard()const;
 	void addCardOnHand(Carte& carte);
 	void addOntable(int position_cart);
-	void setDiscard(std::vector <Carte*> cartes);
+	void setDiscard();
 	void showcart_type_tresor() const;/*we can make a func with cart_type as parameter but jai la flemme de refaire tout le code*/
 	void showcart_type_royaume()const;
 	void showcart_type_carte(Carte::TypeCarte type_cart)const;
@@ -30,6 +30,12 @@ public:
 	bool isTresor(int position)const;
 	bool isRoyaume(int position)const;
 
+	void from_deck_to_place(int position);
+
+	void from_top_deck_to_trash();
+
+	void from_deck_to_discard();
+	void from_top_deck_to_discard();
 	bool isTypeRequested(int position , Carte::TypeCarte type_req)const;
 
 	void pickFromDeckToHand(int nbr_carte);
@@ -43,7 +49,6 @@ public:
 
 private:
 	std::vector <Carte*> m_deck;
-	std::vector <Carte*> m_trash;
 	std::vector <Carte*> m_discard;
 	std::vector <Carte*> m_hand;
 	std::string m_pseudo;

@@ -7,6 +7,12 @@ Deck::Deck()
     carteTexture->loadFromFile("assets/Cards/Carte.png");
 }
 
+Deck::Deck(std::vector<Carte*> v)
+{
+    monDeck = v;
+    carteTexture = new sf::Texture();
+    carteTexture->loadFromFile("assets/Cards/Carte.png");
+}
 
 Deck::~Deck()
 {

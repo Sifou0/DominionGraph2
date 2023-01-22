@@ -30,7 +30,8 @@ int Menu::run()
             {
                 if(event.key.code == sf::Keyboard::Return)
                 {
-                    return 1;
+                    if(currButton < 2) return currButton;
+                    else window->close();
                 }
                 if(event.key.code == sf::Keyboard::Up)
                 {
@@ -51,7 +52,6 @@ int Menu::run()
         window->display();
     }
     return 0;
-    
 }
 
 void Menu::drawButtons()

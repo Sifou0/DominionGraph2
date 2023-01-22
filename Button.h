@@ -14,11 +14,13 @@ private:
 public:
     Button();
     Button(std::string);
+    Button(std::string,int);
     ~Button();
     sf::Sprite* getDrawable();
     sf::Vector2u getSize();
     sf::Text* getText();
     int getNbChar();
+    void setPosition(float,float);
 };
 
 #endif

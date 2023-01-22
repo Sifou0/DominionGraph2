@@ -20,7 +20,7 @@ public:
 	virtual TypeCarte getCardType()const;
 	virtual void effect_card();
 	~CarteTresor();
-	
+	TypeTresor getTypeTresor();
 
 private:
 	TypeTresor m_typetresor;

@@ -20,6 +20,7 @@ public:
 
 	CarteRoyaume();
 	CarteRoyaume(int cost ,std::string name_card, TypeRoyaume typecart , void(&func)(Joueur, std::vector<Joueur*>) );
+	CarteRoyaume(std::string,int);
 	virtual void afficher()const;
 	virtual void bref_description()const;
 	virtual TypeCarte getCardType()const;

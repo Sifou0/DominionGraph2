@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "CarteTresor.h"
-#include "PlateformeGame.h"
+#include "Game.hpp"
 
 using namespace std;
 
@@ -29,6 +29,7 @@ CarteTresor::CarteTresor() {
 	m_typetresor = CarteTresor::CUIVRE;
 	m_valeur = 1;
 	m_carte_cost = 0;
+	setTextureId(2);
 }
 
 CarteTresor::CarteTresor(TypeTresor typetresor):m_typetresor(typetresor)
@@ -40,14 +41,17 @@ CarteTresor::CarteTresor(TypeTresor typetresor):m_typetresor(typetresor)
 	case CarteTresor::CUIVRE:
 		m_valeur = 1;
 		m_carte_cost = 0;
+		this->setTextureId(2);
 		break;
 	case CarteTresor::ARGENT:
 		m_valeur = 2;
 		m_carte_cost = 3;
+		this->setTextureId(1);
 		break;
 	case CarteTresor::OR:
 		m_valeur = 3;
 		m_carte_cost = 6;
+		this->setTextureId(15);
 		break;
 	default:
 		cout << "ERROORR" << endl;
@@ -70,8 +74,7 @@ void CarteTresor::bref_description()const {
 
 void CarteTresor::effect_card()
 {
-	
-	PlateformeGame::ajouterPiece(m_valeur);
+	Game::ajouterPiece(m_valeur);
 };
 
 Carte::TypeCarte CarteTresor::getCardType()const
@@ -82,4 +85,9 @@ Carte::TypeCarte CarteTresor::getCardType()const
 
 CarteTresor::~CarteTresor()
 {
+}
+
+CarteTresor::TypeTresor CarteTresor::getTypeTresor()
+{
+	return m_typetresor;
 }
