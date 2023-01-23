@@ -35,6 +35,7 @@ private:
     static int nbr_action;
     static int piece_posee;
     static int end_game;
+    static Carte* carteP;
     bool phase; //0 -> action 1 -> achat
     void handleKeys();
     void handleEvents();

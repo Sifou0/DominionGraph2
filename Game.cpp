@@ -5,6 +5,7 @@ int Game::nbr_achat = 1;
 int Game::nbr_action = 1;
 int Game::end_game = 0;
 int Game::piece_posee = 0;
+Carte* Game::carteP = new CarteRoyaume();
 Joueur* Game::currJoueur = new Joueur("premier");
 
 void Game::setAction(int n)
@@ -329,10 +330,13 @@ void Game::playCarte()
     {
         if(currJoueur->isRoyaume(currId) && nbr_action > 0)
         {
+           
             dynamic_cast<CarteRoyaume*>(currJoueur->getHandCartes()[currId])->execute_action(*currJoueur,m_list_joueur);
             //nbr_action--;
+            monDeck->addToDeck(currJoueur->getHandCartes()[currJoueur->getHandCartes().size()-1]);
+            std::cout << monDeck->getCartes().size() << std::endl;
             currJoueur->addOntable(currId);
-            monDeck->setDeck(currJoueur->getHandCartes());
+            currId = 0;
         }
     }
     else //Achat
@@ -510,7 +514,6 @@ void Game::handleMouse()
                         {
                             putToDiscard(*carte_royaume_2.back());
                             carte_royaume_2.pop_back();
-
                         }
                         else if(cR->getName() == "Bucheron" && carte_royaume_3.size() > 0)
                         {
@@ -549,10 +552,11 @@ void Game::handleMouse()
         else
         {
             this->phaseAction();
+            monDeck->setDeck(currJoueur->getHandCartes());
+            this->drawAll();
         }
         phase = !phase;
     }
-    monDeck->setDeck(currJoueur->getHandCartes());
     this->drawAll();
 }
 

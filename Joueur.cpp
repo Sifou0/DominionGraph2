@@ -106,6 +106,7 @@ Joueur::Joueur(string pseudo)
 {
 	m_pseudo = pseudo;
 	m_victory_value = 0;
+	m_deck = vector<Carte*>();
 	m_discard = vector<Carte*>();
 	m_hand = vector<Carte*>();
 	
@@ -121,7 +122,7 @@ Joueur::Joueur(string pseudo)
 	
 	shuffle(m_deck.begin() , m_deck.end() , rd);
 	for (int i = 0 ; i <5; i++) {
-		m_hand.push_back(m_deck[i]);
+		m_hand.push_back(m_deck[0]);
 		pop_front(m_deck);
 	}
 
@@ -175,10 +176,12 @@ void Joueur::addToDiscard(Carte& carte)
 
 void Joueur::carteMain()const
 {
-	if(m_hand.size() >0){
-	for (int i = 0; i < m_hand.size(); i++) {
-		m_hand[i]->bref_description();
-	}
+	if(m_hand.size() >0)
+	{
+		for (int i = 0; i < m_hand.size(); i++) 
+		{
+			m_hand[i]->bref_description();
+		}
 	}
 	else {
 		cout << "Main est vide " << endl;
@@ -212,7 +215,7 @@ void Joueur::showDiscard()const
 }
 
 void Joueur::setDiscard(){
-	std::cout << m_discard.size() << std::endl;
+	//std::cout << m_discard.size() << std::endl;
 	if(m_deck.size()>=5){
 		m_hand.insert(m_hand.begin(), m_deck.begin(), m_deck.begin() + 5);
 		m_deck.erase(m_deck.begin() , m_deck.begin() + 5);
@@ -274,25 +277,27 @@ void Joueur::showcart_type_carte(Carte::TypeCarte type_cart)const {
 
 void Joueur::pickFromDeckToHand(int nbr_carte)
 {
-	std::cout << "Here" << std::endl;
 	if(m_deck.size()> nbr_carte)
 	{
-		for (int i = 0; i < nbr_carte; i++) {
-			addCardOnHand(*m_deck.back());
-			m_deck.back()->afficher();
+		//std::cout << "Here1" << std::endl;
+		for (int i = 0; i < nbr_carte ; i++) {
+			m_hand.push_back(m_deck.back());
+			//m_deck.back()->afficher();
 			m_deck.pop_back();
 		}
+		// std::cout << m_hand.size() << std::endl;
 	}
 	else {
-
+		//std::cout << "Here2" << std::endl;
 		shuffle(m_discard.begin(), m_discard.end(),rd);
 		m_deck.insert(m_deck.begin(), m_discard.begin(), m_discard.end());
 		m_discard.clear();
-		for (int i = 0; i < nbr_carte; i++) {
-			addCardOnHand(*m_deck.back());
-			m_deck.back()->afficher();
+		for (int i = 0; i < nbr_carte ; i++) {
+			m_hand.push_back(m_deck.back());
+			//m_deck.back()->afficher();
 			m_deck.pop_back();
 		}
+		// std::cout << m_hand.size() << std::endl;
 	}
 	
 
@@ -323,9 +328,9 @@ void Joueur::from_deck_to_discard()
 {
 	for(int i = 0 ; i < m_hand.size() ; i++)
 	{
-		m_discard.push_back(m_hand.back());
-		m_hand.pop_back();
+		m_discard.push_back(m_hand[i]);
 	}
+	m_hand.clear();
 }
 
 int Joueur::getVictory_value()const
