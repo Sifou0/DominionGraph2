@@ -15,6 +15,8 @@
 class Game : public Screen
 {
 private:
+    sf::Texture* bg;
+    sf::Sprite* bgS;
     sf::Event event;
     Arrow* arrow;
     Deck* monDeck;
@@ -49,6 +51,7 @@ private:
     void phaseAchat();
     void playCarte();
     void drawTexts();
+    void drawAll();
     void phaseAction();
 public:
     Game(sf::RenderWindow*,int);
@@ -60,6 +63,7 @@ public:
     static void ajouterPiece(int);
     static void add_to_player_discard(Carte&);
     static void putonHand(Carte&);
+    static void putToDiscard(Carte&);
 };
 
 #endif

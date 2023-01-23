@@ -168,6 +168,11 @@ void Joueur::addCardOnHand(Carte& carte)
 	m_hand.push_back(&carte);
 }
 
+void Joueur::addToDiscard(Carte& carte)
+{
+	m_discard.push_back(&carte);
+}
+
 void Joueur::carteMain()const
 {
 	if(m_hand.size() >0){
@@ -207,7 +212,7 @@ void Joueur::showDiscard()const
 }
 
 void Joueur::setDiscard(){
-	
+	std::cout << m_discard.size() << std::endl;
 	if(m_deck.size()>=5){
 		m_hand.insert(m_hand.begin(), m_deck.begin(), m_deck.begin() + 5);
 		m_deck.erase(m_deck.begin() , m_deck.begin() + 5);
@@ -220,6 +225,7 @@ void Joueur::setDiscard(){
 		m_hand.insert(m_hand.begin(), m_deck.begin(), m_deck.begin() + 5);
 		m_deck.erase(m_deck.begin(), m_deck.begin() + 5);
 	}
+
 }
 
 void Joueur::showcart_type_tresor() const {
@@ -268,21 +274,23 @@ void Joueur::showcart_type_carte(Carte::TypeCarte type_cart)const {
 
 void Joueur::pickFromDeckToHand(int nbr_carte)
 {
+	std::cout << "Here" << std::endl;
 	if(m_deck.size()> nbr_carte)
 	{
 		for (int i = 0; i < nbr_carte; i++) {
 			addCardOnHand(*m_deck.back());
+			m_deck.back()->afficher();
 			m_deck.pop_back();
 		}
 	}
 	else {
 
-		shuffle(m_discard.begin(), m_discard.end(), rd);
-		shuffle(m_discard.begin(), m_discard.end(),rd);//pour bien melanger les cartes ;)
+		shuffle(m_discard.begin(), m_discard.end(),rd);
 		m_deck.insert(m_deck.begin(), m_discard.begin(), m_discard.end());
 		m_discard.clear();
 		for (int i = 0; i < nbr_carte; i++) {
 			addCardOnHand(*m_deck.back());
+			m_deck.back()->afficher();
 			m_deck.pop_back();
 		}
 	}
@@ -315,9 +323,9 @@ void Joueur::from_deck_to_discard()
 {
 	for(int i = 0 ; i < m_hand.size() ; i++)
 	{
-		m_discard.push_back(m_hand[i]);
+		m_discard.push_back(m_hand.back());
+		m_hand.pop_back();
 	}
-	m_hand.clear();
 }
 
 int Joueur::getVictory_value()const

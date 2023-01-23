@@ -39,7 +39,7 @@ public:
 	bool isTypeRequested(int position , Carte::TypeCarte type_req)const;
 
 	void pickFromDeckToHand(int nbr_carte);
-
+	void addToDiscard(Carte&);
 	bool isGoodIndice(int position , std::vector<Carte*>cartes )const;
 	std::vector<Carte*> getHandCartes()const;
 	std::string getPseudo()const;

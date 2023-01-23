@@ -81,9 +81,8 @@ Carte::TypeCarte CarteRoyaume::getCardType()const
 
 void CarteRoyaume::effect_card()
 {
-	cout << "Une action sera activee " << endl;
-
-	// PlateformeGame::decrement_action();
+	//cout << "Une action sera activee " << endl
+	
 }
 
 string CarteRoyaume::getName()const

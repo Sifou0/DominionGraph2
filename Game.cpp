@@ -32,7 +32,7 @@ void Game::incrementEndGame() {
 void func_village(Joueur j, std::vector<Joueur*>list_joueur)
 {
 
-	Game::setAction(2);
+	//Game::setAction(2);
 
 }
 
@@ -41,7 +41,7 @@ void func_vi(Joueur j, std::vector<Joueur*>list_joueur)
 {
 	j.pickFromDeckToHand(1);
 	Game::setAction(2);
-
+    
 }
 
 void func_festival(Joueur j , std::vector<Joueur*>list_joueur)
@@ -94,7 +94,7 @@ std::vector<CarteVictoire*> pile_domaine = std::vector<CarteVictoire*>(9,new Car
 std::vector<CarteVictoire*> pile_duchet = std::vector<CarteVictoire*>(9,new CarteVictoire(CarteVictoire::DUCHET));
 std::vector<CarteVictoire*> pile_province = std::vector<CarteVictoire*>(9,new CarteVictoire(CarteVictoire::PROVINCE));
 std::vector<CarteVictoire*> pile_cursed = std::vector<CarteVictoire*>(9,new CarteVictoire(CarteVictoire::MALEDICTION));
-std::vector<CarteRoyaume*> carte_royaume_1 = std::vector<CarteRoyaume*>(11,new CarteRoyaume( 3,"Village" , CarteRoyaume::TypeRoyaume::ACTION_ACTION , func_village));
+std::vector<CarteRoyaume*> carte_royaume_1 = std::vector<CarteRoyaume*>(11, new CarteRoyaume(3,"Village" , CarteRoyaume::TypeRoyaume::ACTION_ACTION , func_village));
 std::vector<CarteRoyaume*> carte_royaume_2 = std::vector<CarteRoyaume*>(11, new CarteRoyaume(5, "Marche", CarteRoyaume::TypeRoyaume::ACTION_ACTION, func_village));
 std::vector<CarteRoyaume*> carte_royaume_3 = std::vector<CarteRoyaume*>(11, new CarteRoyaume(3, "Bucheron", CarteRoyaume::TypeRoyaume::ACTION_ACTION, func_village));
 std::vector<CarteRoyaume*> carte_royaume_4 = std::vector<CarteRoyaume*>(11, new CarteRoyaume(3, "Atelier", CarteRoyaume::TypeRoyaume::ACTION_ACTION, func_village));
@@ -123,6 +123,10 @@ bool Game::gameIsEnd()
 
 Game::Game(sf::RenderWindow* w,int nbJ) : Screen(w), nbr_joueur(nbJ)
 {
+    bg = new sf::Texture();
+    bgS = new sf::Sprite();
+    bg->loadFromFile("assets/Images/backgame.jpg");
+    bgS->setTexture(*bg);
     // monDeck = PlateformeGame::getActuelJoueur().getHandCartes();
     arrow = new Arrow();
     monDeck = new Deck();
@@ -249,6 +253,7 @@ int Game::run()
     while (window->isOpen())
     {
         window->clear();
+        window->draw(*bgS);
         monDeck->setDeck(currJoueur->getHandCartes());
         this->initCards();
         if(nextScreen != 0) return nextScreen;
@@ -277,15 +282,21 @@ void Game::handleKeys()
     {
         case sf::Keyboard::Left:
             if(currId > 0) currId--;
+            monDeck->setDeck(currJoueur->getHandCartes());
+            this->drawMonDeck();
             break;
         case sf::Keyboard::Right:
             if(currId < monDeck->getCartes().size()-1) currId++;
+            monDeck->setDeck(currJoueur->getHandCartes());
+            this->drawMonDeck();
             break;
         case sf::Keyboard::Escape:
             nextScreen = 1;
         case sf::Keyboard::Return:
             std::cout << "Play carte\n";
             this->playCarte();
+            monDeck->setDeck(currJoueur->getHandCartes());
+            this->drawMonDeck();
             break;
         default:
             break;
@@ -316,10 +327,12 @@ void Game::playCarte()
 {
     if(!phase) //Action
     {
-        if(currJoueur->isRoyaume(currId))
+        if(currJoueur->isRoyaume(currId) && nbr_action > 0)
         {
-            dynamic_cast<CarteRoyaume*>(currJoueur->getHandCartes()[currId])->effect_card();
+            dynamic_cast<CarteRoyaume*>(currJoueur->getHandCartes()[currId])->execute_action(*currJoueur,m_list_joueur);
+            //nbr_action--;
             currJoueur->addOntable(currId);
+            monDeck->setDeck(currJoueur->getHandCartes());
         }
     }
     else //Achat
@@ -342,13 +355,15 @@ void Game::phaseAchat()
     currJoueur->from_deck_to_discard();
     currJoueur->setDiscard();
     monDeck->setDeck(currJoueur->getHandCartes());
+    this->drawMonDeck();
 }
 
 void Game::phaseAction()
 {
     this->nbr_action = 1;
-    std::cout << monDeck->getCartes().size() << std::endl;
+    //std::cout << monDeck->getCartes().size() << std::endl;
     monDeck->setDeck(currJoueur->getHandCartes());
+    this->drawMonDeck();
 }
 
 void Game::drawAchatRoyaume()
@@ -374,20 +389,28 @@ void Game::initCards()
 void Game::putonHand(Carte &carte)
 {
 	if (carte.getCardType() == Carte::VICTOIRE) {
-		
-		CarteVictoire& carte_v = dynamic_cast<CarteVictoire&>(carte);
-		
+		if(nbr_action > 0)
+		{
+        CarteVictoire& carte_v = dynamic_cast<CarteVictoire&>(carte);
 		carte_v.effect_card(*currJoueur);
+        nbr_action--;
 		currJoueur->addCardOnHand(carte);	
+        }
 	}
 	else {
 		currJoueur->addCardOnHand(carte);
 	}
-	
+    
+}
+
+void Game::putToDiscard(Carte &carte)
+{
+    currJoueur->addToDiscard(carte);
 }
 
 void Game::handleMouse()
 {
+    monDeck->setDeck(currJoueur->getHandCartes());
     if(phase)
     {
         for(Carte* c : achatRoyaume->getCartes())
@@ -402,7 +425,7 @@ void Game::handleMouse()
                         {
                             if(pile_domaine.size() > 1)
                             {
-                                putonHand(*pile_domaine.back());
+                                putToDiscard(*pile_domaine.back());
                                 pile_domaine.pop_back();
                             }
                             if (pile_domaine.size() == 1) 
@@ -414,7 +437,7 @@ void Game::handleMouse()
                         {
                             if(pile_duchet.size() > 1)
                             {
-                                putonHand(*pile_duchet.back());
+                                putToDiscard(*pile_duchet.back());
                                 pile_duchet.pop_back();
                             }
                             if (pile_duchet.size() == 1) 
@@ -426,7 +449,7 @@ void Game::handleMouse()
                         {
                             if(pile_province.size() > 1)
                             {
-                                putonHand(*pile_province.back());
+                                putToDiscard(*pile_province.back());
                                 pile_province.pop_back();
                             }
                             if (pile_province.size() == 1) 
@@ -441,7 +464,7 @@ void Game::handleMouse()
                         {
                             if(pile_cuivre.size() > 1)
                             {
-                                putonHand(*pile_cuivre.back());
+                                putToDiscard(*pile_cuivre.back());
                                 pile_cuivre.pop_back();
                             }
                             if (pile_cuivre.size() == 1) 
@@ -453,7 +476,7 @@ void Game::handleMouse()
                         {
                             if(pile_argent.size() > 1)
                             {
-                                putonHand(*pile_argent.back());
+                                putToDiscard(*pile_argent.back());
                                 pile_argent.pop_back();
                             }
                             if (pile_argent.size() == 1) 
@@ -465,7 +488,7 @@ void Game::handleMouse()
                         {
                             if(pile_or.size() > 1)
                             {
-                                putonHand(*pile_or.back());
+                                putToDiscard(*pile_or.back());
                                 pile_or.pop_back();
                             }
                             if (pile_or.size() == 1) 
@@ -479,34 +502,34 @@ void Game::handleMouse()
                         CarteRoyaume* cR = dynamic_cast<CarteRoyaume*>(c);
                         if(cR->getName() == "Village" && carte_royaume_1.size() > 0)
                         {
-                            std::cout << "Village\n";
-                            putonHand(*carte_royaume_1.back());
+                            //std::cout << "Village\n";
+                            putToDiscard(*carte_royaume_1.back());
                             carte_royaume_1.pop_back();
                         }
                         else if(cR->getName() == "Marche" && carte_royaume_2.size() > 0)
                         {
-                            putonHand(*carte_royaume_2.back());
+                            putToDiscard(*carte_royaume_2.back());
                             carte_royaume_2.pop_back();
 
                         }
                         else if(cR->getName() == "Bucheron" && carte_royaume_3.size() > 0)
                         {
-                            putonHand(*carte_royaume_3.back());
+                            putToDiscard(*carte_royaume_3.back());
                             carte_royaume_3.pop_back();
                         }
                         else if(cR->getName() == "Atelier" && carte_royaume_4.size() > 0)
                         {
-                            putonHand(*carte_royaume_4.back());
+                            putToDiscard(*carte_royaume_4.back());
                             carte_royaume_4.pop_back();
                         }
                         else if(cR->getName() == "Forgeron" && carte_royaume_5.size() > 0)
                         {
-                            putonHand(*carte_royaume_5.back());
+                            putToDiscard(*carte_royaume_5.back());
                             carte_royaume_5.pop_back();
                         }
                         else if(cR->getName() == "Festival" && carte_royaume_6.size() > 0)
                         {
-                            putonHand(*carte_royaume_6.back());
+                            putToDiscard(*carte_royaume_6.back());
                             carte_royaume_6.pop_back();
                         }
                         phase = 0;
@@ -518,6 +541,7 @@ void Game::handleMouse()
     }
     if(buttonFinTour->getDrawable()->getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*window))))
     {
+        monDeck->setDeck(currJoueur->getHandCartes());
         if(phase)
         {
             this->phaseAchat();
@@ -528,6 +552,8 @@ void Game::handleMouse()
         }
         phase = !phase;
     }
+    monDeck->setDeck(currJoueur->getHandCartes());
+    this->drawAll();
 }
 
 
@@ -552,4 +578,15 @@ void Game::drawTexts()
         texts[i]->setPosition(10,window->getSize().y - ((i+1) * texts[0]->getGlobalBounds().height) - 10);
     }
     for(sf::Text* t : texts) window->draw(*t);
+}
+
+void Game::drawAll()
+{
+    window->clear();
+    this->drawAchatRoyaume();
+    this->drawFinTour();
+    this->drawMonDeck();
+    this->drawReversed();
+    this->drawTexts();
+    window->display();
 }
