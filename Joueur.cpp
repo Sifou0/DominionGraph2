@@ -125,7 +125,6 @@ Joueur::Joueur(string pseudo)
 		m_hand.push_back(m_deck[0]);
 		pop_front(m_deck);
 	}
-
 	
 }
 
@@ -228,7 +227,6 @@ void Joueur::setDiscard(){
 		m_hand.insert(m_hand.begin(), m_deck.begin(), m_deck.begin() + 5);
 		m_deck.erase(m_deck.begin(), m_deck.begin() + 5);
 	}
-
 }
 
 void Joueur::showcart_type_tresor() const {
@@ -277,7 +275,7 @@ void Joueur::showcart_type_carte(Carte::TypeCarte type_cart)const {
 
 void Joueur::pickFromDeckToHand(int nbr_carte)
 {
-	if(m_deck.size()> nbr_carte)
+	if(m_deck.size()>= nbr_carte)
 	{
 		//std::cout << "Here1" << std::endl;
 		for (int i = 0; i < nbr_carte ; i++) {
@@ -287,7 +285,8 @@ void Joueur::pickFromDeckToHand(int nbr_carte)
 		}
 		// std::cout << m_hand.size() << std::endl;
 	}
-	else {
+	else
+	{
 		//std::cout << "Here2" << std::endl;
 		shuffle(m_discard.begin(), m_discard.end(),rd);
 		m_deck.insert(m_deck.begin(), m_discard.begin(), m_discard.end());

@@ -41,7 +41,7 @@ void func_village(Joueur j, std::vector<Joueur*>list_joueur)
 void func_vi(Joueur j, std::vector<Joueur*>list_joueur)
 {
 	j.pickFromDeckToHand(1);
-	Game::setAction(2);
+	Game::setAction(3);
     
 }
 
@@ -135,7 +135,7 @@ Game::Game(sf::RenderWindow* w,int nbJ) : Screen(w), nbr_joueur(nbJ)
     reversedCartes = new Deck();
     font = new sf::Font();
     font->loadFromFile("assets/Fonts/Adonais.ttf");
-    texts = std::vector<sf::Text*>{new sf::Text("Credits : 0", *font,30), new sf::Text("Action : 1",*font,30),new sf::Text("Phase : Action",*font,30)};
+    texts = std::vector<sf::Text*>{new sf::Text("Credits : 0", *font,30), new sf::Text("Action : 1",*font,30),new sf::Text("Phase : Action",*font,30), new sf::Text("Achats : 1",*font,30)};
     buttonFinTour = new Button("Fin de Tour");
     //back = new PlateformeGame();
     //monDeck->setDeck(std::vector<Carte*>{new CarteTresor(CarteTresor::CUIVRE),new CarteTresor(CarteTresor::ARGENT),new CarteTresor(CarteTresor::OR),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE),new CarteVictoire(CarteVictoire::DOMAINE)});
@@ -332,8 +332,10 @@ void Game::playCarte()
         {
            
             dynamic_cast<CarteRoyaume*>(currJoueur->getHandCartes()[currId])->execute_action(*currJoueur,m_list_joueur);
-            //nbr_action--;
-            monDeck->addToDeck(currJoueur->getHandCartes()[currJoueur->getHandCartes().size()-1]);
+            nbr_action--;
+            monDeck->setDeck(currJoueur->getHandCartes());
+            this->initCards();
+            this->drawMonDeck();
             std::cout << monDeck->getCartes().size() << std::endl;
             currJoueur->addOntable(currId);
             currId = 0;
@@ -341,7 +343,7 @@ void Game::playCarte()
     }
     else //Achat
     {
-        if(currJoueur->isTresor(currId))
+        if(currJoueur->isTresor(currId) && nbr_achat > 0)
         {
             dynamic_cast<CarteTresor*>(currJoueur->getHandCartes()[currId])->effect_card();
             currJoueur->addOntable(currId);
@@ -350,11 +352,12 @@ void Game::playCarte()
             //window->clear();
         }
     }
-    
+    if((phase && nbr_achat == 0) || (!phase && nbr_action == 0)) phase = !phase;
 }
 
 void Game::phaseAchat()
 {
+    this->nbr_achat = 1;
     this->piece_posee = 0; ///// !!!!!!!!!!!!!
     currJoueur->from_deck_to_discard();
     currJoueur->setDiscard();
@@ -397,14 +400,15 @@ void Game::putonHand(Carte &carte)
 		{
         CarteVictoire& carte_v = dynamic_cast<CarteVictoire&>(carte);
 		carte_v.effect_card(*currJoueur);
-        nbr_action--;
+        
 		currJoueur->addCardOnHand(carte);	
         }
 	}
 	else {
 		currJoueur->addCardOnHand(carte);
 	}
-    
+    nbr_action--;
+
 }
 
 void Game::putToDiscard(Carte &carte)
@@ -421,7 +425,7 @@ void Game::handleMouse()
         {
             if(c->getDrawable()->getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*window))))
             {
-                if(piece_posee >= c->getCarteCost())
+                if(piece_posee >= c->getCarteCost() && nbr_achat > 0)
                 {
                     if (c->getCardType() == Carte::VICTOIRE)
                     {
@@ -535,9 +539,14 @@ void Game::handleMouse()
                             putToDiscard(*carte_royaume_6.back());
                             carte_royaume_6.pop_back();
                         }
-                        phase = 0;
                     }
                     piece_posee -= c->getCarteCost();
+                    nbr_achat--;
+                    if(nbr_achat == 0)
+                    {
+                        phase = !phase;
+                        this->phaseAchat();
+                    }
                 }
             }
         }
@@ -575,6 +584,7 @@ void Game::drawTexts()
 {
     texts[0]->setString("Credits : " + std::to_string(piece_posee));
     texts[1]->setString("Actions : " + std::to_string(nbr_action));
+    texts[3]->setString("Achats : " + std::to_string(nbr_achat));
     if(phase == 0) texts[2]->setString("Phase : Action");
     else  texts[2]->setString("Phase : Achat");
     for(int i = 0 ; i < texts.size() ; ++i)
@@ -586,6 +596,7 @@ void Game::drawTexts()
 
 void Game::drawAll()
 {
+    this->initCards();
     window->clear();
     this->drawAchatRoyaume();
     this->drawFinTour();
