@@ -5,6 +5,7 @@ int Game::nbr_achat = 1;
 int Game::nbr_action = 1;
 int Game::end_game = 0;
 int Game::piece_posee = 0;
+bool Game::effect = 0;
 Carte* Game::carteP = new CarteRoyaume();
 Joueur* Game::currJoueur = new Joueur("premier");
 
@@ -30,6 +31,11 @@ void Game::incrementEndGame() {
 	end_game++;
 }
 
+void Game::enableEffect()
+{
+    effect = true;
+}
+
 void func_village(Joueur j, std::vector<Joueur*>list_joueur)
 {
 
@@ -51,13 +57,14 @@ void func_festival(Joueur j , std::vector<Joueur*>list_joueur)
 	Game::setAction(2);
 	Game::increment_achat();
 	Game::ajouterPiece(2);
-
+    Game::enableEffect();
 }
 
 void func_buch(Joueur j , std::vector<Joueur*>list_joueur)
 {
 	Game::increment_achat();
 	Game::ajouterPiece(2);
+    Game::enableEffect();
 }
 
 void func_marche(Joueur j , std::vector<Joueur*>list_joueur)
@@ -66,11 +73,12 @@ void func_marche(Joueur j , std::vector<Joueur*>list_joueur)
 	Game::increment_action();
 	Game::increment_achat();
 	Game::ajouterPiece(1);
+    Game::enableEffect();
 }
 void func_attelier(Joueur j , std::vector<Joueur*>list_joueur)
 {
 	
-	///// Game::show_from_piece_value(4);
+	Game::ajouterPiece(4);
 
 }
 
@@ -357,7 +365,8 @@ void Game::playCarte()
 
 void Game::phaseAchat()
 {
-    this->nbr_achat = 1;
+    if(!effect) this->nbr_achat = 1;
+    effect = false;
     this->piece_posee = 0; ///// !!!!!!!!!!!!!
     currJoueur->from_deck_to_discard();
     currJoueur->setDiscard();

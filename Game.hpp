@@ -35,6 +35,7 @@ private:
     static int nbr_action;
     static int piece_posee;
     static int end_game;
+    static bool effect;
     static Carte* carteP;
     bool phase; //0 -> action 1 -> achat
     void handleKeys();
@@ -65,6 +66,7 @@ public:
     static void add_to_player_discard(Carte&);
     static void putonHand(Carte&);
     static void putToDiscard(Carte&);
+    static void enableEffect();
 };
 
 #endif
